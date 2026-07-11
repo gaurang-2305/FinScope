@@ -31,7 +31,7 @@ def has_extractable_text(pages_text: list[str]) -> bool:
 
 
 if __name__ == "__main__":
-    pdf_path = "test_data/2024_Annual_Report.pdf"
+    pdf_path = "test_data/sample_report.pdf"
 
     start = time.time()
     plumber_pages = extract_text_pdfplumber(pdf_path)
