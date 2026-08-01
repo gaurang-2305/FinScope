@@ -1,10 +1,12 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import apiClient from "../api/client";
 
 function UploadPage() {
   const [selectedFile, setSelectedFile] = useState(null);
-  const [status, setStatus] = useState(null); // "success" | "error" | null
+  const [status, setStatus] = useState(null);
   const [message, setMessage] = useState("");
+  const navigate = useNavigate();
 
   function handleFileChange(event) {
     setSelectedFile(event.target.files[0]);
@@ -28,11 +30,12 @@ function UploadPage() {
     formData.append("file", selectedFile);
 
     try {
-      const response = await apiClient.post("/upload", formData, {
+      setStatus("loading");
+      setMessage("Analyzing report...");
+      const response = await apiClient.post("/api/analyze", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      setStatus("success");
-      setMessage(`Uploaded: ${response.data.filename} (${response.data.size} bytes)`);
+      navigate("/dashboard", { state: response.data });
     } catch (error) {
       setStatus("error");
       setMessage(
@@ -43,11 +46,15 @@ function UploadPage() {
 
   return (
     <div className="p-8">
+      <h1 className="text-2xl font-bold mb-4">FinScope</h1>
       <input type="file" onChange={handleFileChange} />
-      <button onClick={handleUpload} className="ml-4 px-4 py-2 bg-blue-600 text-white rounded">
+      <button
+        onClick={handleUpload}
+        className="ml-4 px-4 py-2 bg-blue-600 text-white rounded"
+      >
         Upload
       </button>
-      {status === "success" && <p className="text-green-600 mt-4">{message}</p>}
+      {status === "loading" && <p className="text-blue-600 mt-4">{message}</p>}
       {status === "error" && <p className="text-red-600 mt-4">{message}</p>}
     </div>
   );
