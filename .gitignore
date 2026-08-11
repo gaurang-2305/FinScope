@@ -2,3 +2,10 @@ backend/venv/
 __pycache__/
 .env
 node_modules/
+*.pyc
+*.pyo
+.pytest_cache/
+backend/finscope.db
+backend/ml/models/*.joblib
+dist/
+.DS_Store
